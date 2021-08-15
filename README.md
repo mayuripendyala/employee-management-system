@@ -10,7 +10,7 @@ So that I can organize and plan my business
 ```
 
  <br>
-<img src="./demo/demo.png" alt="demogif">  
+<img src="./demo.png" alt="demogif">  
 </p>
   <h2>Table of Contents</h2>
   <ul> 
