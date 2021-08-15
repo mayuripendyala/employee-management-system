@@ -5,7 +5,7 @@ const cTable =require('console.table');
 
 function showAllEmployees() {
     connection.query(
-        `SELECT  e.id AS Employee_ID, e.first_name AS First_Name, e.last_name AS Last_Name, r.salary AS Salary, r.role_title AS title, d.department_name AS department, (m.fist_name || ' ' || m.last_name) as manager
+        `SELECT  e.id AS Employee_ID, e.first_name AS First_Name, e.last_name AS Last_Name, r.salary AS Salary, r.title AS title, d.department_name AS department, CONCAT(m.first_name, ' ',m.last_name) as manager
         FROM employee e LEFT JOIN employee m ON e.manager_id = m.id 
         INNER JOIN role r ON e.role_id = r.id 
         INNER JOIN department d ON r.department_id = d.id 
@@ -30,6 +30,7 @@ function showAllRoles() {
         } 
     )
 }
+
 
 
 function showAllDepartments() {

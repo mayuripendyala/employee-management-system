@@ -1,59 +1,62 @@
 const inquirer = require('inquirer');
-const connection = require('../config/connection');
+const connection = require('../config/connection.js');
 const first = require('../server');
 const cTable =require('console.table');
 
 function  updateEmployeeRole() {
-    connection.query(
-        `SELECT (e.first_name || ' ' || e.last_name) as name, e.id AS employee_id, r.role_title, r.id AS role_id, d.department_name
-        FROM employee e
-        LEFT JOIN employee em ON e.manager_id = em.id
-        INNER JOIN role r ON e.role_id = r.id
-        INNER JOIN department d ON r.department_id = d.id
-        ORDER BY r.id`,
-        function(err,res) {
-            if(err) throw err;
-            console.table(res);
-           inquirer
-            .prompt([{
+    
+
+    var  employeeChoices = [];
+    connection.query("SELECT * FROM employee",  function (err, data) {
+        if (err) throw err;
+        for (i = 0; i < data.length; i++) {
+          employeeChoices.push(data[i].id + " " + data[i].first_name + " " + data[i].last_name)
+        }
+        // console.table(data);
+        
+    });
+
+
+    var  roleChoices = [];
+    connection.query("SELECT * FROM role",  function (err, data) {
+        if (err) throw err;
+        for (i = 0; i < data.length; i++) {
+            roleChoices.push(data[i].id + "  " + data[i].title)
+        }
+        // console.table(data);
+        
+   
+    // console.log(roleChoices,employeeChoices);
+     inquirer
+        .prompt([{
                 name: "updateEmployee",
                 type: "list",
-                choices: function() {
-                    var employArr = [];
-                    for(var i=0; i < res.length; i++) {
-                        employArr.push(res[i].name);
-                    }
-                    return employArr;
-                },
-                message: "Which employee's role do you want to update?"
+                message: "Which employee's role do you want to update?",
+                choices: employeeChoices
             },
             {
                 name: "updateRole",
                 type: "list",
-                choices: function() {
-                    var employRole = [];
-                    for(var i=0; i < res.length; i++) {
-                        employRole.push(res[i].role_id);
-                    }
-                    let removeRoleDups = new Set(employRole);
-                    let newRoleArr = [...removeRoleDups];
-                    return newRoleArr;
-                },
-                message: "Which employee's role do you want to update?"
+                message: "What role are you seeking to change it to?",
+                choices: roleChoices
             }
-        ]).then((answer) => {
+        ])
+        .then((answer) => {
             connection.query(
-                `UPDATE employee SET ?`,
+                `UPDATE employee SET ? WHERE id = ${answer.updateEmployee[0]}`,
+                {
+                    role_id: answer.updateRole[0],
+                },
                 function(err,results) {
                     if(err) throw err;
                     console.log(`Updated employee's role`);
                     first.start();
                 } 
             )
+       
         })
-        } 
-    )
-
-
+        .catch((error)=> {console.error();
+    });
+    });
 }
-module.exports = {updateEmployeeRole}
+module.exports = {updateEmployeeRole};

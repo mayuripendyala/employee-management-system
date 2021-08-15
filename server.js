@@ -1,4 +1,4 @@
-const connection = require('./db/connection');
+const connection = require('./config/connection.js');
 const add = require("./operations/add.js");
 const view = require("./operations/view.js");
 const update = require("./operations/update.js");
@@ -11,7 +11,7 @@ const chalk = require('chalk');
 
 
 console.log(
-    chalk.white.dbBlackBright(
+    chalk.white.bgBlackBright(
         figlet.textSync('Employee Manager',{horizontalLayout:'full',verticalLayout :'full'})
     )
 );
@@ -47,13 +47,13 @@ function start() {
                     view.showAllRoles();
                 }
                 else if (answer.start === "Add Role") {
-                    add.addRoles();
+                    add.addRole();
                 }
                 else if (answer.start === "View All Departments") {
                     view.showAllDepartments();
                 }
                 else if (answer.start === "Add Department") {
-                    add.addDepartments();
+                    add.addDepartment();
                 }
                 else {
                     console.table("Goodbye!");

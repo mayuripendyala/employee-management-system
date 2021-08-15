@@ -6,12 +6,12 @@ USE employee_db;
 
 
 CREATE TABLE department (
-    id INT NOT NULL AUTO_INCEMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     department_name VARCHAR(30) 
 );
 
 CREATE TABLE role (
-    id INT NOT NULL AUTO_INCEMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     title VARCHAR(30),
     salary DECIMAL(9,2),
     department_id INT ,
@@ -20,10 +20,15 @@ CREATE TABLE role (
 );
 
 CREATE TABLE employee (
-    id INT NOT NULL AUTO_INCEMENT PRIMARY KEY,
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     first_name VARCHAR(30),
     last_name VARCHAR(30),
-    role_id INT FOREIGN KEY REFERENCES role(id),
-    manager_id INT FOREIGN KEY REFERENCES employee(id)
-
+    manager_id INT ,
+    role_id INT ,
+    FOREIGN KEY (role_id) REFERENCES role(id)
 );
+ALTER TABLE employee
+   ADD CONSTRAINT sr_fk_emp_man 
+   FOREIGN KEY (manager_id)
+   REFERENCES employee(id)
+;
